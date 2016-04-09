@@ -2,6 +2,7 @@
 
 module Imagewave.Server (runApp, app) where
 
+import Imagewave.Conversion
 import Network.Wai (Application)
 import Network.Wai.Middleware.Gzip
 import Network.Wai.Middleware.RequestLogger
@@ -14,7 +15,8 @@ app' = do
 
   S.get "/:image_hash" $ do
     hash <- S.param "image_hash"
-    S.raw hash
+    resizeImg "thing.png" 250 250
+    S.raw $ file "./static/thing.png"
 
 app :: IO Application
 app = S.scottyApp app'
