@@ -1,7 +1,14 @@
 module Imagewave.Conversion where
 
-import Graphics.Image.Processing.Geometric
+import Data.Text as T
+import Graphics.Image
+import Graphics.Image.Processing
 
+resizeImg :: FilePath -> Int -> Int -> IO FilePath
 resizeImg imgPath w h = do
+  putStrLn $ "reading image at " ++ show imgPath
   f <- readImageRGB imgPath
-  writeImage "static/thing.png" $ resize (Bilinear Edge) (w, h) f
+  let path = "static/thing-resized.png"
+  writeImage path $ resize (Bilinear Edge) (w, h) f
+  putStrLn $ "wrote image to " ++ show path
+  return path

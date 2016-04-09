@@ -2,10 +2,14 @@
 
 module Imagewave.Server (runApp, app) where
 
+import Data.Monoid ((<>))
 import Imagewave.Conversion
+import Network.HTTP.Types
 import Network.Wai (Application)
 import Network.Wai.Middleware.Gzip
 import Network.Wai.Middleware.RequestLogger
+import System.Directory
+import System.IO.Unsafe
 import qualified Web.Scotty as S
 
 app' :: S.ScottyM ()
@@ -14,9 +18,11 @@ app' = do
   S.middleware logStdoutDev
 
   S.get "/:image_hash" $ do
-    hash <- S.param "image_hash"
-    resizeImg "thing.png" 250 250
-    S.raw $ file "./static/thing.png"
+    i <- S.param "image_hash"
+    w <- S.param "w"
+    h <- S.param "h"
+    let f = resizeImg i w h
+    S.file $ unsafePerformIO f
 
 app :: IO Application
 app = S.scottyApp app'

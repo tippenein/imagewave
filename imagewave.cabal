@@ -23,6 +23,9 @@ library
       base >= 4.7 && < 5
     , aeson
     , hip
+    , directory
+    , text
+    , http-types
     , scotty
     , wai
     , wai-extra
